@@ -22,9 +22,9 @@ jobs:
               repo: context.repo.repo,
               labels: ["user responded"]
             })
-            github.rest.issues.removeLabels({
+            github.rest.issues.removeLabel({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ["wait for update"]
+              name: "wait for update"
             })
