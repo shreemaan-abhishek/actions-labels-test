@@ -9,13 +9,16 @@ on:
   issue_comment: # in GitHub API, all PRs are issues, but not all issues are PRs.
     types: [created]
 
+env:
+  ACTIONS_RUNNER_DEBUG: true
+
 jobs:
   run-check:
     runs-on: ubuntu-latest
     steps:
       - name: Remove `wait for update` label on push
         uses: actions/github-script@v6
-        if: ${{ (github.event.comment.user.login == github.event.issue.user.login && contains(github.event.issue.labels.*.name, 'wait for update') && !contains(github.event.issue.labels.*.name, 'user responded')) || ( contains(github.event.pull_request.labels.*.name, 'wait for update') && github.event.pull_request_review_comment.user.login == github.event.pull_request.user.login ) || ( contains(github.event.pull_request.labels.*.name, 'wait for update') && !contains(github.event.pull_request.labels.*.name, 'user responded') ) }}
+        if: ${{ (contains(github.event.pull_request.labels.*.name, 'wait for update') && !contains(github.event.pull_request.labels.*.name, 'user responded')) && (github.event.comment.user.login == github.event.issue.user.login || github.event.pull_request_review_comment.user.login == github.event.pull_request.user.login ) }}
         with:
           script: |
             github.rest.issues.addLabels({
