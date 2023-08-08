@@ -4,6 +4,8 @@ permissions:
 
 on:
   pull_request:
+  pull_request_review_comment:
+    types: [created, deleted]
 
 jobs:
   run-check:
@@ -11,7 +13,7 @@ jobs:
     steps:
       - name: Remove `wait for update` label on push
         uses: actions/github-script@v6
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'wait for update') && !contains(github.event.pull_request.labels.*.name, 'user responded') }}
+        if: ${{ ( contains(github.event.pull_request.labels.*.name, 'wait for update') && github.event.pull_request_review_comment.user.login == github.event.pull_request.user.login ) || ( contains(github.event.pull_request.labels.*.name, 'wait for update') && !contains(github.event.pull_request.labels.*.name, 'user responded') ) }}
         with:
           script: |
             github.rest.issues.addLabels({
