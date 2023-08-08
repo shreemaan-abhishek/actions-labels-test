@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Remove `wait for update` label on push
         uses: actions/github-script@v6
-        if: ${{ contains(github.event.issue.labels.*.name, 'wait for update') && !contains(github.event.issue.labels.*.name, 'user responded') }}
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'wait for update') && !contains(github.event.pull_request.labels.*.name, 'user responded') }}
         with:
           script: |
             github.rest.issues.addLabels({
